@@ -25,4 +25,10 @@
 		</g>
 	</g>
 </g>
+<line fill="none" stroke="#000000" stroke-miterlimit="10" x1="110.8" y1="489.6" x2="181.6" y2="418.9"/>
+<line fill="none" stroke="#000000" stroke-miterlimit="10" x1="146.7" y1="462.9" x2="217.4" y2="392.2"/>
+<line fill="none" stroke="#000000" stroke-miterlimit="10" x1="123.8" y1="500.7" x2="194.5" y2="430"/>
+<line fill="none" stroke="#000000" stroke-miterlimit="10" x1="159.6" y1="474" x2="230.4" y2="403.2"/>
+<path fill="none" stroke="#000000" stroke-miterlimit="10" d="M414.7,58.3l212.2-27.5L646,80.5l-9.2,50.4c0,0-69.5,5.3-69.5,1.5
+	c0-3.8,1.5-47.3,1.5-47.3l42.7-1.5l-5.3-19.8L491.8,75.9l-76.3,39.7L414.7,58.3z"/>
 </svg>
