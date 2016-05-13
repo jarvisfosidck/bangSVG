@@ -7,19 +7,21 @@
 #pathGenText {
 	width:100%;
 	padding:2px;
-	font-size:6px;	
+	font-size:6px;
 }
 </style>
 </head>
 
 <body>
 
+<div id="svgDisplayArea">
+
 
 <?xml version="1.0" encoding="utf-8"?>
 <svg version="1.1" id="bangSVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 792 612" enable-background="new 0 0 792 612" xml:space="preserve">
-	 
-	
+
+
 
 <g>
 	<rect x="64.3" y="93" fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" width="289.6" height="265.9"/>
@@ -29,7 +31,7 @@
 				<polygon fill="#FFFFFF" points="516,259.4 252.3,259.4 252.3,546.9 589.5,546.9 589.5,354.5 516,354.5 				"/>
 			</g>
 			<g>
-				<polygon fill="none" stroke="#000000" stroke-miterlimit="10" points="516,259.4 252.3,259.4 252.3,546.9 589.5,546.9 
+				<polygon fill="none" stroke="#000000" stroke-miterlimit="10" points="516,259.4 252.3,259.4 252.3,546.9 589.5,546.9
 					589.5,354.5 516,354.5 				"/>
 			</g>
 		</g>
@@ -38,7 +40,7 @@
 				<polygon fill="#FFFFFF" points="725.7,166.4 516,166.4 516,259.4 516,354.5 589.5,354.5 725.7,354.5 				"/>
 			</g>
 			<g>
-				<polygon fill="none" stroke="#000000" stroke-miterlimit="10" points="725.7,166.4 516,166.4 516,259.4 516,354.5 589.5,354.5 
+				<polygon fill="none" stroke="#000000" stroke-miterlimit="10" points="725.7,166.4 516,166.4 516,259.4 516,354.5 589.5,354.5
 					725.7,354.5 				"/>
 			</g>
 		</g>
@@ -65,8 +67,13 @@
 	</g>
 </g>
 
+<path id="complexLine" fill="none" stroke="#000000" stroke-miterlimit="10" d="M414.7,58.3l212.2-27.5L646,80.5l-9.2,50.4c0,0-69.5,5.3-69.5,1.5
+	c0-3.8,1.5-47.3,1.5-47.3l42.7-1.5l-5.3-19.8L491.8,75.9l-76.3,39.7L414.7,58.3z"/>
+
 
 </svg>
+
+</div>
 
 <input type="text" id="pathGenText" class="pathGenText">
 
@@ -79,7 +86,7 @@ function _(id) {
 function _circ(svg,attrs) {
 	var c = document.createElementNS(xmlns,"circle")
 	for (var a in attrs) {
-		c.setAttributeNS(null, a,attrs[a]);	
+		c.setAttributeNS(null, a,attrs[a]);
 	}
 	return c;
 }
@@ -96,7 +103,7 @@ function _ppline() {
 			return b;
 		}).join(",");
 	});*/
-	
+
 	var p = document.createElementNS(xmlns,"polyline")
 	,attrs = {
 		'stroke' : '#31da24'
@@ -106,10 +113,10 @@ function _ppline() {
 		,'stroke-width' : 2
 	}
 	for (var a in attrs) {
-		p.setAttributeNS(null, a,attrs[a]);	
+		p.setAttributeNS(null, a,attrs[a]);
 	}
 	svg.appendChild(p);
-	
+
 	var el = _('pathGenText');
 	var s = prettyPoints.join("L");
 	s = '<path d="M' + s + '" />';
@@ -117,11 +124,11 @@ function _ppline() {
 	return p;
 }
 	_('pathGenText').value = "";
-	
+
 //	R=SVGDoc.createElementNS(xmlns,"rect")
 //SVGRoot.appendChild(R)
 //SVGDoc.getElementById(id)
-		
+
 
 var svg = _('bangSVG')
 ,pointsArray = []
@@ -132,15 +139,15 @@ var svg = _('bangSVG')
 ,rects = svg.getElementsByTagNameNS(xmlns,'rect')
 ,dots
 ,prettyLine = function() {
-		
+
 		line = document.createElementNS(xmlns,"circle")
 		,update = function() {
-		
+
 			//do stuff here
-			
+
 		}
-	
-	
+
+
 	}
 ;
 function getRectPoints(c) {
@@ -152,7 +159,7 @@ function getRectPoints(c) {
 			,c : (b.x+b.width) + "," + (b.y+b.height)
 			,d : b.x+ "," + (b.y+b.height)
 		}
-		
+
 		for (var d in dots) {
 			if (pointsArray.indexOf(dots[d]) === -1 ) {
 				pointsArray.push(dots[d]);
@@ -170,7 +177,7 @@ function getPoints(c) {
 			}
 		}
 	}
-	
+
 }
 getPoints(c);getPoints(pl);getRectPoints(rects)
 var params = {
@@ -179,7 +186,7 @@ var params = {
 	,'cx' : 40
 	,'cy' : 40
 	,'r' : 8
-	
+
 }
 
 for (var p in pointsArray) {
@@ -201,7 +208,7 @@ function setPrettyPoints(evt) {
 	,'cx' : c.getAttribute('cx')
 	,'cy' : c.getAttribute('cy')
 	,'r' : 3
-	
+
 	}
 	var o = _circ(svg,params);
 	svg.appendChild(o);
@@ -215,8 +222,62 @@ function updatePrettyLine() {
 
 }
 
+eventHandler = function() {
+	"use strict";
 
-document.getElementsByTagName('body')[0].addEventListener("dblclick", _ppline);
+	this.clickStack = new Array()
+
+	this.listen = function(evt) {
+		this.clickStack.push(evt);
+		this.think();
+
+	}
+	this.think = function() {
+		var cS = this.clickStack,rS = cS.reverse();
+		console.log(rS[0] === 'DBCLICK' && rS[1] === 'CLICK'0],rS[1],rS[2])
+		if (rS[1] === 'DBLCLICK' && rS[0] === 'CLICK' && rS[2] === 'CLICK') {
+
+				clearLastBang();
+				console.log('cats')
+
+		}
+
+
+	}
+	this.report = function(o) {
+		for (var x in this.clickStack) {
+			if (o) {
+				console.log(this.clickStack[x].o);
+			} else {
+				console.log(this.clickStack[x]);
+			}
+		}
+	}
+
+	this.init = function(params) {
+		var el = document.getElementsByTagName('body')[0];
+		var that = this;
+		["CLICK", "DBLCLICK", "KEYDOWN", "KEYUP", "KEYPRESS"].forEach(function(ev) {
+			el.addEventListener(ev.toLowerCase(), function() {
+					that.listen(ev);
+			})
+		});
+		return true;
+	}
+
+}
+
+eh = new eventHandler();
+eh.init();
+
+function clearLastBang() {
+	console.log(lastLine);
+	lastLine.parentNode.removeChild(lastLine)
+}
+var lastLine;
+_('svgDisplayArea').addEventListener("dblclick", function() {
+	lastLine = _ppline();
+});
 
 
 
