@@ -77,7 +77,8 @@
 
 <input type="text" id="pathGenText" class="pathGenText">
 
-
+<script type="text/javascript" src="collectionSelection.js"></script>
+<script type="text/javascript" src="eventHandler.js"></script>
 <script type="text/javascript">
 
 function _(id) {
@@ -92,47 +93,34 @@ function _circ(svg,attrs) {
 }
 
 
-
 function _ppline() {
-	prettyPoints.push(prettyPoints[0]);
-	/*prettyPoints = prettyPoints.map(function(a) {
-		return a.split(",").map(function(b) {
-			//console.log(b);
-			b = parseFloat(b);//.toFixed(4);
-			//console.log(b);
-			return b;
-		}).join(",");
-	});*/
-
+	prettyPoints.push(prettyPoints[0]);//closes the polyline shape;
 	var p = document.createElementNS(xmlns,"polyline")
 	,attrs = {
 		'stroke' : '#31da24'
-		,'points' : prettyPoints //closes the shape
+		,'points' : prettyPoints
 		,'fill' : "#ededed"
 		,'fill-opacity' : 0.5
 		,'stroke-width' : 2
 	}
 	for (var a in attrs) {
-		p.setAttributeNS(null, a,attrs[a]);
+		p.setAttributeNS(null, a, attrs[a]);
 	}
 	svg.appendChild(p);
-
 	var el = _('pathGenText');
 	var s = prettyPoints.join("L");
 	s = '<path d="M' + s + '" />';
 	el.value = s;
 	return p;
 }
-	_('pathGenText').value = "";
 
-//	R=SVGDoc.createElementNS(xmlns,"rect")
-//SVGRoot.appendChild(R)
-//SVGDoc.getElementById(id)
-
+_('pathGenText').value = "";
 
 var svg = _('bangSVG')
 ,pointsArray = []
 ,prettyPoints = []
+,bangSelection = new SelectionSet(svg)
+,bangModel = new CollectionSS
 ,xmlns="http://www.w3.org/2000/svg"
 ,c = svg.getElementsByTagNameNS(xmlns,'polygon')
 ,pl = svg.getElementsByTagNameNS(xmlns,'polyline')
@@ -159,7 +147,6 @@ function getRectPoints(c) {
 			,c : (b.x+b.width) + "," + (b.y+b.height)
 			,d : b.x+ "," + (b.y+b.height)
 		}
-
 		for (var d in dots) {
 			if (pointsArray.indexOf(dots[d]) === -1 ) {
 				pointsArray.push(dots[d]);
@@ -179,7 +166,8 @@ function getPoints(c) {
 	}
 
 }
-getPoints(c);getPoints(pl);getRectPoints(rects)
+getPoints(c);getPoints(pl);getRectPoints(rects);//gets x,y vertix of lines and rectangles
+
 var params = {
 	'fill' : 'red'
 	,'stroke' : '#da2424'
@@ -203,93 +191,44 @@ function setPrettyPoints(evt) {
 	pair = c.getAttribute('cx') + "," + c.getAttribute('cy');
 	prettyPoints.push(pair);
 	var params = {
-	'fill' : 'yellow'
-	,'stroke' : '#da2424'
-	,'cx' : c.getAttribute('cx')
-	,'cy' : c.getAttribute('cy')
-	,'r' : 3
-
+		'fill' : 'yellow'
+		,'stroke' : '#da2424'
+		,'cx' : c.getAttribute('cx')
+		,'cy' : c.getAttribute('cy')
+		,'r' : 3
 	}
 	var o = _circ(svg,params);
 	svg.appendChild(o);
+	bangSelection.add(o);
 }
 
-
-function updatePrettyLine() {
-
-
-
-
-}
-
-eventHandler = function() {
-	"use strict";
-
-	this.clickStack = new Array()
-
-	this.listen = function(evt) {
-		this.clickStack.push(evt);
-		this.think();
-
-	}
-	this.think = function() {
-		var cS = this.clickStack,rS = cS.reverse();
-		console.log(rS[0] === 'DBCLICK' && rS[1] === 'CLICK'0],rS[1],rS[2])
-		if (rS[1] === 'DBLCLICK' && rS[0] === 'CLICK' && rS[2] === 'CLICK') {
-
-				clearLastBang();
-				console.log('cats')
-
-		}
-
-
-	}
-	this.report = function(o) {
-		for (var x in this.clickStack) {
-			if (o) {
-				console.log(this.clickStack[x].o);
-			} else {
-				console.log(this.clickStack[x]);
-			}
-		}
-	}
-
-	this.init = function(params) {
-		var el = document.getElementsByTagName('body')[0];
-		var that = this;
-		["CLICK", "DBLCLICK", "KEYDOWN", "KEYUP", "KEYPRESS"].forEach(function(ev) {
-			el.addEventListener(ev.toLowerCase(), function() {
-					that.listen(ev);
-			})
-		});
-		return true;
-	}
-
-}
+var params = {};
+params['eventPatterns'] = {
+	'clearLastBang' : clearLastBang
+	,'bangSaveToModel' : bangSaveToModel
+};
 
 eh = new eventHandler();
-eh.init();
+eh.init(params);
 
 function clearLastBang() {
-	console.log(lastLine);
-	lastLine.parentNode.removeChild(lastLine)
+	pointsArray = [];
+	prettyPoints = [];
+	lastLine.parentNode.removeChild(lastLine);
+	bangSelection.removeAll();
 }
+function bangSaveToModel() {
+	var cnt = bangModel.len();
+	bangModel[cnt] = lastLine;
+	clearLastBang();
+}
+
 var lastLine;
 _('svgDisplayArea').addEventListener("dblclick", function() {
 	lastLine = _ppline();
 });
 
 
-
-
-
-
-
-//grab all the svg line, polyline, polygon elements
-
-//find all the end points
-
-//make them into cool shapes and colors
 
 
 

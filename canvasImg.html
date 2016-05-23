@@ -1,4 +1,26 @@
-<html><body>
+<html>
+    <head>
+    <style>
+        #years {
+  font-size: 1rem;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  width: 100%;
+}
+
+.bar_background {
+  fill: #F0F0F0;
+}
+
+.bar_fill {
+  fill: #CCC;
+}
+
+.bar_label {
+  text-anchor: end;
+}</style></head>
+    
+    <body>
 
  <div >   <svg id="svg" version="1.1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 792 612" width=100 height=100 enable-background="new 0 0 792 612" xml:space="preserve">
@@ -33,57 +55,38 @@
 	c0-3.8,1.5-47.3,1.5-47.3l42.7-1.5l-5.3-19.8L491.8,75.9l-76.3,39.7L414.7,58.3z"/>
 </svg>
     </div>
+   
+    
+    <svg id="chart" width="400" height="264"><g transform="translate(100,0)"><rect style="fill:#d2d2d2;" class="bar_background" width="260" height="16"/><rect class="bar_fill" width="91.26984126984127" height="16" x="0"/><text class="bar_total" x="268" y="8" dy=".35em">115</text><text width="92" class="bar_label" x="-8" y="8" dy=".35em">January</text></g><g transform="translate(100,24)"><rect class="bar_background" width="260" height="16"/><rect class="bar_fill" width="107.14285714285714" height="16" x="0"/><text class="bar_total" x="268" y="8" dy=".35em">135</text><text width="92" class="bar_label" x="-8" y="8" dy=".35em">February</text></g><g transform="translate(100,48)"><rect class="bar_background" width="260" height="16"/><rect class="bar_fill" width="121.42857142857142" height="16" x="0"/><text class="bar_total" x="268" y="8" dy=".35em">153</text><text width="92" class="bar_label" x="-8" y="8" dy=".35em">March</text></g><g transform="translate(100,72)"><rect class="bar_background" width="260" height="16"/><rect class="bar_fill" width="103.96825396825396" height="16" x="0"/><text class="bar_total" x="268" y="8" dy=".35em">131</text><text width="92" class="bar_label" x="-8" y="8" dy=".35em">April</text></g><g transform="translate(100,96)"><rect class="bar_background" width="260" height="16"/><rect class="bar_fill" width="150.79365079365078" height="16" x="0"/><text class="bar_total" x="268" y="8" dy=".35em">190</text><text width="92" class="bar_label" x="-8" y="8" dy=".35em">May</text></g><g transform="translate(100,120)"><rect class="bar_background" width="260" height="16"/><rect class="bar_fill" width="211.9047619047619" height="16" x="0"/><text class="bar_total" x="268" y="8" dy=".35em">267</text><text width="92" class="bar_label" x="-8" y="8" dy=".35em">June</text></g><g transform="translate(100,144)"><rect class="bar_background" width="260" height="16"/><rect class="bar_fill" width="247.6190476190476" height="16" x="0"/><text class="bar_total" x="268" y="8" dy=".35em">312</text><text width="92" class="bar_label" x="-8" y="8" dy=".35em">July</text></g><g transform="translate(100,168)"><rect class="bar_background" width="260" height="16"/><rect class="bar_fill" width="178.57142857142858" height="16" x="0"/><text class="bar_total" x="268" y="8" dy=".35em">225</text><text width="92" class="bar_label" x="-8" y="8" dy=".35em">August</text></g><g transform="translate(100,192)"><rect class="bar_background" width="260" height="16"/><rect class="bar_fill" width="141.26984126984127" height="16" x="0"/><text class="bar_total" x="268" y="8" dy=".35em">178</text><text width="92" class="bar_label" x="-8" y="8" dy=".35em">September</text></g><g transform="translate(100,216)"><rect class="bar_background" width="260" height="16"/><rect class="bar_fill" width="130.95238095238096" height="16" x="0"/><text class="bar_total" x="268" y="8" dy=".35em">165</text><text width="92" class="bar_label" x="-8" y="8" dy=".35em">November</text></g><g transform="translate(100,240)"><rect class="bar_background" width="260" height="16"/><rect class="bar_fill" width="190.47619047619045" height="16" x="0"/><text class="bar_total" x="268" y="8" dy=".35em">240</text><text width="92" class="bar_label" x="-8" y="8" dy=".35em">December</text></g></svg>
     <canvas id="canvas"></canvas>
     
 <div id="img"></div>
         
 <script>
-    
-    
-function importSVG(sourceSVG, targetCanvas) {
-    // https://developer.mozilla.org/en/XMLSerializer
-    svg_xml = (new XMLSerializer()).serializeToString(sourceSVG);
-    var ctx = targetCanvas.getContext('2d');
+       
 
-    // this is just a JavaScript (HTML) image
-    var img = new Image();
-    // http://en.wikipedia.org/wiki/SVG#Native_support
-    // https://developer.mozilla.org/en/DOM/window.btoa
-    img.src = "data:image/svg+xml;base64," + btoa(svg_xml);
-
-    img.onload = function() {
-        // after this, Canvas’ origin-clean is DIRTY
-        ctx.drawImage(img, 0, 0);
-    }
-}
-    
     
 var canvas = document.createElementNS("http://www.w3.org/1999/xhtml", "canvas");
-    canvas.width  = 100;
+canvas.width  = 100;
 canvas.height = 100;
 var ctx = canvas.getContext("2d");
-var svg = document.getElementById("svg"),
+var svg = document.getElementById("chart"),
 simg = new Image(),
 svg_xml = (new XMLSerializer()).serializeToString(svg);
 simg.src = "data:image/svg+xml;base64," + btoa(svg_xml);
- ctx.fillStyle = "green";
-    ctx.rect(10, 10, 100, 100);
+ctx.fillStyle = "green";
+ctx.rect(10, 10, 100, 100);
 ctx.fill();
     
-    var img = document.createElement("img"), el = document.getElementById('img');
-
-
-    
-    
+var img = document.createElement("img"), el = document.getElementById('img');    
 ctx.drawImage(simg, 0, 0, 100,100);
-    
 var myImage = canvas.toDataURL("image/jpg");
 img.src = myImage;     
-
 el.appendChild(img);
-    el.appendChild(canvas);
-    el.appendChild(simg);
+el.appendChild(canvas);
+el.appendChild(simg);
     
 </script>
+        <a href="javascript:void(0)">linkm e</a>
 </body>
 </html>
