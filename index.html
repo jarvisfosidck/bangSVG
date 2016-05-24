@@ -214,13 +214,28 @@ eh.init(params);
 function clearLastBang() {
 	pointsArray = [];
 	prettyPoints = [];
-	lastLine.parentNode.removeChild(lastLine);
-	bangSelection.removeAll();
+	if (!lastLine.parentNode) {
+		console.log(lastLine,'cats');
+		showSketch();
+	} else {
+		lastLine.parentNode.removeChild(lastLine);
+		bangSelection.removeAll();
+	}
 }
 function bangSaveToModel() {
 	var cnt = bangModel.len();
 	bangModel[cnt] = lastLine;
 	clearLastBang();
+}
+function showSketch() {
+	svg.style.display="none";
+	var sketchSVG = document.createElementNS(xmlns,'svg');
+	for (var x in bangModel) {
+		sketchSVG.appendChild(bangModel[x]);
+	}
+
+	_('svgDisplayArea').appendChild(sketchSVG);
+
 }
 
 var lastLine;
