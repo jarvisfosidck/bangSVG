@@ -2,28 +2,161 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>bang SVG</title>
 <style type="text/css">
 
+#trackPad {
+	width:300px;
+	height: 300px;
+	border:1px solid #000;
+	margin-left: 60px;
+	margin-top: 60px;
+	float:left;
+}
+#circ {
+	width:300px;
+	height: 300px;
+	border:1px solid #000;
+	margin-left: 60px;
+	margin-top: 60px;
+	float:left;
+}
+#console {
+	clear:both;
+}
+body {
+	width: 560px;
+}
+svg circle {
+	display:none;
+}
+svg circle.show {
+	display: block;
+}
 </style>
 </head>
 
 <body>
 
-<P style="height:200px;width:200px;border:1px solid #000">
+<P id="trackPad">
 
 </P>
+
+<P id="circ">
+
+
+
+
+</P>
+<p id="console">
+
+</p>
 <script type="text/javascript" src="collectionSelection.js"></script>
 <script type="text/javascript" src="eventHandler.js"></script>
+<script type="text/javascript" src="svgSketch.js"></script>
 
 <script type="text/javascript">
 
 var params = {};
-
-
 eh = new eventHandler();
 eh.init(params);
 
+var xmlns="http://www.w3.org/2000/svg"
+var svg = document.createElementNS(xmlns,'svg');
+svg.style.height = "300px";
+svg.style.width = "300px";
+var box = _("circ");
+var params = {
+	'fill' : '#fff'
+	,'stroke' : '#da2424'
+	,'cx' : 150
+	,'cy' : 150
+	,'r' : 80
+	,'id' : "circle"
+}
+var o = _circ(svg,params);
+svg.appendChild(o);
+
+params = {
+	'fill' : '#da2424'
+	,'stroke' : '#da2424'
+	,'cx' : 112.5
+	,'cy' : 112.5
+	,'r' : 12
+	,'id' : "quad4"
+}
+o = _circ(svg,params);
+svg.appendChild(o);
+params = {
+	'fill' : '#da2424'
+	,'stroke' : '#da2424'
+	,'r' : 12
+	,'cx' : 187.5
+	,'cy' : 112.5
+	,'id' : "quad1"
+}
+o1 = _circ(svg,params);
+svg.appendChild(o1);
+params = {
+	'fill' : '#da2424'
+	,'stroke' : '#da2424'
+	,'r' : 12
+	,'cx' : 187.5
+	,'cy' : 187.5
+	,'id' : "quad2"
+}
+o = _circ(svg,params);
+svg.appendChild(o);
+params = {
+	'fill' : '#da2424'
+	,'stroke' : '#da2424'
+	,'r' : 12
+	,'cx' : 112.5
+	,'cy' : 187.5
+	,'id' : "quad3"
+}
+o = _circ(svg,params);
+svg.appendChild(o);
+
+box.appendChild(svg);
+
+function Quads(q) {
+	var a = ['quad1','quad2','quad3','quad4'];
+	for (var x in a) {
+		_(a[x]).style.display = "none";
+	}
+	if (q) {
+		_(q).style.display = "block";
+	}
+}
+document.addEventListener('beginCircle', function(e) {
+	_("circle").style.display = 'block';
+});
+document.addEventListener('quad1', function(e) {
+	Quads("quad1");
+});
+document.addEventListener('quad2', function(e) {
+	Quads("quad2");
+});
+document.addEventListener('quad3', function(e) {
+	Quads("quad3");
+});
+document.addEventListener('quad4', function(e) {
+	Quads("quad4");
+});
+document.addEventListener('endCircle', function(e) {
+	_("circle").style.display = 'none';
+	Quads();
+});
+
+//showCircle
+
+//hideCircle
+
+//showQuad
+
+//hideQuad
 
 
 

@@ -79,19 +79,8 @@
 
 <script type="text/javascript" src="collectionSelection.js"></script>
 <script type="text/javascript" src="eventHandler.js"></script>
+<script type="text/javascript" src="svgSketch.js"></script>
 <script type="text/javascript">
-
-function _(id) {
-  return document.getElementById(id);
-}
-function _circ(svg,attrs) {
-	var c = document.createElementNS(xmlns,"circle")
-	for (var a in attrs) {
-		c.setAttributeNS(null, a,attrs[a]);
-	}
-	return c;
-}
-
 
 function _ppline() {
 	prettyPoints.push(prettyPoints[0]);//closes the polyline shape;
@@ -127,15 +116,10 @@ var svg = _('bangSVG')
 ,rects = svg.getElementsByTagNameNS(xmlns,'rect')
 ,dots
 ,prettyLine = function() {
-
 		line = document.createElementNS(xmlns,"circle")
 		,update = function() {
-
 			//do stuff here
-
 		}
-
-
 	}
 ;
 function getRectPoints(c) {
@@ -233,9 +217,7 @@ function showSketch() {
 	for (var x in bangModel) {
 		sketchSVG.appendChild(bangModel[x]);
 	}
-
 	_('svgDisplayArea').appendChild(sketchSVG);
-
 }
 
 var lastLine;
