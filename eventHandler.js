@@ -9,7 +9,7 @@ eventCollection = function() {
 	this.previousEvent = false;
 	this.current = false;
 	this.set = [];
-	this.maxLength = 200;
+	this.maxLength = 400;
 	return this;
 }
 eventCollection.prototype.get = function(e) {
@@ -35,11 +35,15 @@ eventCollection.prototype.add = function(e) {
 		,'vh' : false
 	}
 
+
 if (a.x && this.previousEvent && this.previousEvent.x ) {
 
 		a.vh = this.vectorHeading(a,this.previousEvent);
 		//_('console').innerHTML += Math.sign;
 	}
+	/*	if (a.keyCode) {
+		a.vh = "__break__";
+	}*/
 	this.current = a;
 	this.set.unshift(a);
 }
@@ -47,7 +51,8 @@ eventCollection.prototype.vectorHeading = function(d1,d2) {
 
 	var dx = d2.x - d1.x
 	 	,dy = d2.y - d1.y;
-	if (dx != 0 && dy != 0) {
+	//if (dx != 0 && dy != 0) {
+	if ( ((dx > 0 || dx < 0) && (dy > 0 || dy < 0)) ) {
 		return Math.sign(parseInt(dx,10)) + "," + Math.sign(parseInt(dy,10));
 	} else {
 		return "";
@@ -56,6 +61,9 @@ eventCollection.prototype.vectorHeading = function(d1,d2) {
 eventCollection.prototype.enforeMax = function(max) {
 	cnt=parseInt(max/2,10);
 	this.set = this.set.splice(0,cnt);
+}
+eventCollection.prototype.resetAll = function() {
+	this.set = [];
 }
 eventCollection.prototype.remove = function(o) {
 	var ns = {}
@@ -82,7 +90,7 @@ eventHandler = function() {
 	this.moveStack = [];
 
 	this.listen = function(e,evt) {
-		if (["MOUSEDOWN", "MOUSEMOVE", "MOUSEUP", "MOUSEOUT", "TOUCHSTART","TOUCHMOVE"].indexOf(evt) !== -1) {
+		if (["KEYUP","MOUSEDOWN", "MOUSEMOVE", "MOUSEUP", "MOUSEOUT", "TOUCHSTART","TOUCHMOVE"].indexOf(evt) !== -1) {
 			this.eventStack.add(e,evt);
 			e.preventDefault();
 			this.findGesture(this.eventStack.get());
@@ -108,44 +116,64 @@ eventHandler = function() {
 		stack = stack || this.eventStack.get();
 		var c = stack,s = "";
 		for (var x in c) {
-			//_('console').innerHTML += c[x].vh;
 			if (c[x].vh != "") {
 				s += " " + c[x].vh;
 			}
 		}
-		//_('console').innerHTML += s;
+		//_('console').innerHTML = s;
 
-		var clockwiseRE = /( 1,1){1,}( 1,-1){1,}( -1,-1){1,}( -1,1){1,}/;
+		var gestureRE = {
 
-		var clockwiseREq3 = /^( 1,1){1,}( 1,-1){1,}( -1,-1){1,}( -1,1){1,}/;
-		var clockwiseREq2 = /^( 1,-1){1,}( -1,-1){1,}( -1,1){1,}( 1,1){1,}/;
-		var clockwiseREq1 = /^( -1,-1){1,}( -1,1){1,}( 1,1){1,}( 1,-1){1,}/;
-		var clockwiseREq4 = /^( -1,1){1,}( 1,1){1,}( 1,-1){1,}( -1,-1){1,}/;
+			 infinitySpapeBCR : /( -1,1){1,}( -1,-1){1,}( 1,-1){1,}( 1,1){1,}( 1,-1){1,}( -1,-1){1,}( -1,1){1,}/
+			,infinityShapeBCL : /( 1,-1){1,}( 1,1){1,}( -1,1){1,}( -1,-1){1,}( -1,1){1,}( 1,1){1,}( 1,-1){1,}/
 
-		if (clockwiseRE.test(s)) {
+			,upSpike : /^( -1,1){1,}( -1,-1){1,}( -1,1){1,}( -1,-1){1,}/
+			,downSpike : /^( -1,1){1,}( -1,-1){1,}( -1,1){1,}/
+
+			,lowercaseE : /( 1,1){1,}( -1,1){1,}( -1,-1){1,}( 1,-1){1,}( 1,1){1,}/
+
+			,counterClockwise : /^( -1,-1){1,}( 1,-1){1,}( 1,1){1,}( -1,1){1,}/
+			,clockwise : /^( 1,1){1,}( 1,-1){1,}( -1,-1){1,}( -1,1){1,}/
+
+			,clockwiseREq3 : /^( 1,1){1,}( 1,-1){1,}( -1,-1){1,}( -1,1){1,}/
+			,clockwiseREq2 : /^( 1,-1){1,}( -1,-1){1,}( -1,1){1,}( 1,1){1,}/
+			,clockwiseREq1 : /^( -1,-1){1,}( -1,1){1,}( 1,1){1,}( 1,-1){1,}/
+			,clockwiseREq4 : /^( -1,1){1,}( 1,1){1,}( 1,-1){1,}( -1,-1){1,}/
+		}
+
+		for (var x in gestureRE) {
+			if (gestureRE[x].test(s)) {
+				var event = new Event(x);
+				document.dispatchEvent(event);
+			}
+		}
+
+		if (gestureRE.clockwise.test(s)) {
 
 			var event = new Event('beginCircle');
 			document.dispatchEvent(event);
-			if (clockwiseREq1.test(s)) {
+			if (gestureRE.clockwiseREq1.test(s)) {
 				event = new Event('quad1');
 				document.dispatchEvent(event);
-			} else if (clockwiseREq2.test(s)) {
+			} else if (gestureRE.clockwiseREq2.test(s)) {
 				event = new Event('quad2');
 				document.dispatchEvent(event);
-			} else if (clockwiseREq3.test(s)) {
+			} else if (gestureRE.clockwiseREq3.test(s)) {
 				event = new Event('quad3');
 				document.dispatchEvent(event);
-			} else if (clockwiseREq4.test(s)) {
+			} else if (gestureRE.clockwiseREq4.test(s)) {
 				event = new Event('quad4');
 				document.dispatchEvent(event);
 			}
 			this.beginCircleHappened = true;
 		}
+
+/*
 		if (this.beginCircleHappened && !clockwiseRE.test(s)) {
 			this.beginCircleHappened = false;
 			//event = new Event('endCircle');
 			//document.dispatchEvent(event);
-		}
+		}*/
 
 	}
 	this.getStack = function() {

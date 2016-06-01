@@ -21,6 +21,7 @@
 	margin-left: 60px;
 	margin-top: 60px;
 	float:left;
+	display:none;
 }
 #console {
 	clear:both;
@@ -38,6 +39,7 @@ svg circle.show {
 </head>
 
 <body>
+
 
 <P id="trackPad">
 
@@ -118,7 +120,6 @@ params = {
 }
 o = _circ(svg,params);
 svg.appendChild(o);
-
 box.appendChild(svg);
 
 function Quads(q) {
@@ -131,19 +132,34 @@ function Quads(q) {
 	}
 }
 document.addEventListener('beginCircle', function(e) {
-	_("circle").style.display = 'block';
+	//_("circle").style.display = 'block';
+	_("console").innerHTML += " circle";
+});
+document.addEventListener('counterClockwise', function(e) {
+	_("console").innerHTML += " counterClockwise";
+});
+document.addEventListener('infinityShapeBCL', function(e) {
+	_("console").innerHTML += " infinity BCL";
+	//alert('infin8');
+});
+document.addEventListener('infinityShapeBCR', function(e) {
+	_("console").innerHTML += " infinity Shape BCR";
+	//alert('infin8');
+});
+document.addEventListener('lowercaseE', function(e) {
+	_("console").innerHTML += " lower case e";
 });
 document.addEventListener('quad1', function(e) {
-	Quads("quad1");
+	//Quads("quad1");
 });
 document.addEventListener('quad2', function(e) {
-	Quads("quad2");
+	//Quads("quad2");
 });
 document.addEventListener('quad3', function(e) {
-	Quads("quad3");
+	//Quads("quad3");
 });
 document.addEventListener('quad4', function(e) {
-	Quads("quad4");
+	//Quads("quad4");
 });
 document.addEventListener('endCircle', function(e) {
 	_("circle").style.display = 'none';
